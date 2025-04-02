@@ -1,26 +1,29 @@
 import express from "express";
-import { NextFunction, Request, Response } from "express";
+// import { NextFunction, Request, Response } from "express";
+import { requestCount } from "./monitoring/requestCount";
+import client from "prom-client";
 
 const app = express();
 
 app.use(express.json());
+app.use(requestCount)
 
-export const middleware = (req: Request, res: Response, next: NextFunction) => {
-  const startTime = Date.now();
-  next();
-  const endTime = Date.now();
-  
-  const timetook = endTime - startTime;
-  console.log(`Request took ${endTime - startTime}ms`);
+// export const middleware = (req: Request, res: Response, next: NextFunction) => {
+//   const startTime = Date.now();
+//   next();
+//   const endTime = Date.now();
 
-  if (timetook > 2) {
-    console.log("taking too much time");
-  } else {
-    console.log("super fast");
-  }
-};
+//   const timetook = endTime - startTime;
+//   console.log(`Request took ${endTime - startTime}ms`);
 
-app.use(middleware);
+//   if (timetook > 2) {
+//     console.log("taking too much time");
+//   } else {
+//     console.log("super fast");
+//   }
+// };
+
+//app.use(middleware);
 
 app.get("/user", (req, res) => {
   res.send({
@@ -38,3 +41,10 @@ app.post("/user", (req, res) => {
 });
 
 app.listen(3000);
+
+// from prom-client:
+app.get("/metrics", async (req, res) => {
+    const metrics = await client.register.metrics();
+    res.set('Content-Type', client.register.contentType);
+    res.end(metrics);
+})
