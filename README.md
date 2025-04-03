@@ -1,4 +1,5 @@
-## COUNTER
+## COUNTER: THE TOAL NUMBER OF HTTP REQUESTS
+
 ```
 npm install prom-client
 ```

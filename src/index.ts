@@ -1,12 +1,14 @@
 import express from "express";
 // import { NextFunction, Request, Response } from "express";
-import { requestCount } from "./monitoring/requestCount";
+import { requestCount } from "./monitoring/count";
 import client from "prom-client";
+import { gaugeCount } from "./monitoring/gauge";
 
 const app = express();
 
 app.use(express.json());
-app.use(requestCount)
+app.use(requestCount);
+app.use(gaugeCount);
 
 // export const middleware = (req: Request, res: Response, next: NextFunction) => {
 //   const startTime = Date.now();
@@ -44,7 +46,7 @@ app.listen(3000);
 
 // from prom-client:
 app.get("/metrics", async (req, res) => {
-    const metrics = await client.register.metrics();
-    res.set('Content-Type', client.register.contentType);
-    res.end(metrics);
-})
+  const metrics = await client.register.metrics();
+  res.set("Content-Type", client.register.contentType);
+  res.end(metrics);
+});
