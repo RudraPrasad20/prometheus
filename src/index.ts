@@ -3,12 +3,14 @@ import express from "express";
 import { requestCount } from "./monitoring/count";
 import client from "prom-client";
 import { gaugeCount } from "./monitoring/gauge";
+import { histogramRequestCount } from "./monitoring/histogram";
 
 const app = express();
 
 app.use(express.json());
 app.use(requestCount);
 app.use(gaugeCount);
+app.use(histogramRequestCount);
 
 // export const middleware = (req: Request, res: Response, next: NextFunction) => {
 //   const startTime = Date.now();
